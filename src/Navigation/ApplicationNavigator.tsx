@@ -10,21 +10,41 @@ import {
 import { PaperProvider } from "react-native-paper";
 import { DarkTheme, LightTheme } from "../Theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AppHeader } from "../Components";
+import { Platform, StatusBar } from "react-native";
+import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
 const ApplicationNavigator = () => {
-  const theme = useSelector(selectTheme);
+  const { mode } = useSelector(selectTheme);
+
+  useEffect(() => {
+    StatusBar.setBarStyle(mode === "dark" ? "light-content" : "dark-content");
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor("transparent");
+      StatusBar.setTranslucent(true);
+    }
+  }, [mode]);
 
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={theme.mode === "dark" ? DarkTheme : LightTheme}>
+      <PaperProvider theme={mode === "dark" ? DarkTheme : LightTheme}>
         <NavigationContainer
-          theme={
-            theme.mode === "dark" ? NavigationDarkTheme : NavigationLightTheme
-          }
+          theme={mode === "dark" ? NavigationDarkTheme : NavigationLightTheme}
         >
-          <Stack.Navigator initialRouteName="LocationTracker">
+          <Stack.Navigator
+            initialRouteName="LocationTracker"
+            screenOptions={{
+              header: ({ navigation, route, options }) => (
+                <AppHeader
+                  title={options.title || route.name}
+                  showBack={navigation.canGoBack()}
+                  onBackPress={navigation.goBack}
+                />
+              ),
+            }}
+          >
             <Stack.Screen
               name="LocationTracker"
               component={LocationTracker}
