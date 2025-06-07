@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import * as Location from "expo-location";
 import { Alert } from "react-native";
-import { Address, LocationCoords } from "../Types/location";
+import { Address, LocationCoords } from "../Types/Location.Types";
 import { Constants } from "../Constants/Constants";
 
 const LOCATION_OPTIONS = {

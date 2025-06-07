@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
-import { IconButton, useTheme } from "react-native-paper";
 import useLocationService from "../../Hooks/useLocationService";
-import { SearchBar, LocationDetails } from "../../Components";
+import { SearchBar, LocationDetails, ReCenterButton } from "../../Components";
 import { MapStyles } from "../../Theme";
 import { useSelector } from "react-redux";
 import { selectTheme } from "../../Redux/Slices/Theme.Slice";
+import { Constants } from "../../Constants/Constants";
 
 const LocationTracker = () => {
   const mapRef = useRef<MapView>(null);
   const [region, setRegion] = useState<Region | null>(null);
-  const theme = useTheme();
   const { mode } = useSelector(selectTheme);
   const {
     location,
@@ -32,8 +31,8 @@ const LocationTracker = () => {
     const newRegion: Region = {
       latitude,
       longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
+      latitudeDelta: Constants.LATITUDE_DELTA,
+      longitudeDelta: Constants.LONGITUDE_DELTA,
     };
     setRegion(newRegion);
     mapRef.current?.animateToRegion(newRegion, 1000);
@@ -46,11 +45,7 @@ const LocationTracker = () => {
   }, [location]);
 
   const handleSearch = async () => {
-    try {
-      await searchPlace();
-    } catch (error) {
-      console.error("Search error:", error);
-    }
+    await searchPlace();
   };
 
   const handleGetCurrentLocation = async () => {
@@ -65,6 +60,8 @@ const LocationTracker = () => {
         style={styles.map}
         region={region || undefined}
         customMapStyle={MapStyles[mode]}
+        accessibilityLabel="Map showing your current location"
+        accessibilityRole="image"
       >
         {location && (
           <Marker
@@ -72,12 +69,13 @@ const LocationTracker = () => {
               latitude: location.latitude,
               longitude: location.longitude,
             }}
-            title="Location"
+            title="Your Location"
             description={
               address
                 ? `${address.street}, ${address.city}`
                 : "Loading address..."
             }
+            accessibilityLabel="Your current location marker"
           />
         )}
       </MapView>
@@ -87,19 +85,21 @@ const LocationTracker = () => {
         onChangeText={setSearchQuery}
         onSearch={handleSearch}
         isLoading={isSearching}
+        accessibilityLabel="Search for a location"
+        accessibilityHint="Enter an address or place name to search"
       />
 
       <View style={styles.bottomContainer}>
-        <IconButton
-          testID="location-button"
-          icon="crosshairs-gps"
-          mode="contained"
-          size={24}
+        <ReCenterButton
           onPress={handleGetCurrentLocation}
-          style={{ backgroundColor: theme.colors.surface }}
-          iconColor={theme.colors.primary}
+          isLoading={isLoadingLocation}
         />
-        <LocationDetails address={address} isLoading={isLoadingLocation} />
+        <LocationDetails
+          address={address}
+          isLoading={isLoadingLocation}
+          accessibilityLabel="Location details"
+          accessibilityHint="Shows your current address and coordinates"
+        />
       </View>
     </View>
   );

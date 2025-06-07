@@ -1,23 +1,31 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
-import { Address, LocationCoords } from "../../Types/location";
+import { Address } from "../../Types/Location.Types";
 import { formatAddress } from "../../Utils/Utils";
 
 interface LocationDetailsProps {
   address: Address | null;
   isLoading: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 }
 
 const LocationDetails: React.FC<LocationDetailsProps> = ({
   address,
   isLoading,
+  accessibilityLabel,
+  accessibilityHint,
 }) => {
   const theme = useTheme();
 
   if (isLoading) {
     return (
-      <Card style={styles.card}>
+      <Card
+        style={styles.card}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
+      >
         <Card.Content style={styles.cardContent}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
           <Text variant="bodyLarge">Loading location...</Text>
@@ -27,7 +35,11 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({
   }
 
   return (
-    <Card style={styles.card}>
+    <Card
+      style={styles.card}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+    >
       <Card.Content>
         <Text
           variant="titleMedium"

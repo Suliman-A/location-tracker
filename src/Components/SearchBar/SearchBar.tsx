@@ -7,6 +7,8 @@ interface SearchBarProps {
   onChangeText: (text: string) => void;
   onSearch: () => void;
   isLoading: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -14,6 +16,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onChangeText,
   onSearch,
   isLoading,
+  accessibilityLabel,
+  accessibilityHint,
 }) => {
   const theme = useTheme();
 
@@ -33,6 +37,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
       iconColor={theme.colors.primary}
       inputStyle={{ color: theme.colors.onSurface }}
       placeholderTextColor={theme.colors.onSurfaceVariant}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { Address } from "../Types/location";
+import { Address } from "../Types/Location.Types";
 
 export const formatAddress = (address: Address): string => {
   const parts = [

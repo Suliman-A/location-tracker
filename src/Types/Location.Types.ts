@@ -1,5 +1,3 @@
-import { LocationObject } from "expo-location";
-
 export interface Address {
   street: string;
   city: string;

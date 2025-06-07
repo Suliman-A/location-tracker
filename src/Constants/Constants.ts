@@ -26,4 +26,7 @@ export const Constants = {
       buttonText: "OK",
     },
   },
+  // Map zoom level
+  LATITUDE_DELTA: 0.005, // Shows about 500 meters vertically
+  LONGITUDE_DELTA: 0.005, // Shows about 500 meters horizontally
 } as const;
