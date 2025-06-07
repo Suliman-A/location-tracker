@@ -19,6 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <Searchbar
+      testID="search-bar"
       placeholder="Enter street address..."
       onChangeText={onChangeText}
       value={value}

@@ -1,24 +1,25 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { Card, Text, useTheme } from "react-native-paper";
 import { Address, LocationCoords } from "../../Types/location";
 import { formatAddress } from "../../Utils/Utils";
 
 interface LocationDetailsProps {
-  location: LocationCoords | null;
   address: Address | null;
+  isLoading: boolean;
 }
 
 const LocationDetails: React.FC<LocationDetailsProps> = ({
-  location,
   address,
+  isLoading,
 }) => {
   const theme = useTheme();
 
-  if (!location) {
+  if (isLoading) {
     return (
-      <Card>
-        <Card.Content>
+      <Card style={styles.card}>
+        <Card.Content style={styles.cardContent}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
           <Text variant="bodyLarge">Loading location...</Text>
         </Card.Content>
       </Card>
@@ -26,11 +27,11 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({
   }
 
   return (
-    <Card>
+    <Card style={styles.card}>
       <Card.Content>
         <Text
           variant="titleMedium"
-          style={[styles.locationTypeText, { color: theme.colors.primary }]}
+          style={[styles.locationText, { color: theme.colors.primary }]}
         >
           Location Details
         </Text>
@@ -45,9 +46,19 @@ const LocationDetails: React.FC<LocationDetailsProps> = ({
 };
 
 const styles = StyleSheet.create({
-  locationTypeText: {
+  card: {
+    width: "100%",
+    marginTop: 16,
+  },
+  locationText: {
     marginBottom: 8,
     fontWeight: "600",
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
   },
 });
 

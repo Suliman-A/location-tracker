@@ -1,8 +1,14 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import * as Location from "expo-location";
 import { Alert } from "react-native";
 import { Address, LocationCoords } from "../Types/location";
 import { Constants } from "../Constants/Constants";
+
+const LOCATION_OPTIONS = {
+  accuracy: Location.Accuracy.Balanced, // More balanced accuracy
+  timeInterval: 5000, // Update every 5 seconds
+  distanceInterval: 10, // Update every 10 meters
+};
 
 /**
  * A custom hook that provides location services functionality including:
@@ -15,6 +21,7 @@ import { Constants } from "../Constants/Constants";
  * @property {LocationCoords | null} location - Current location coordinates
  * @property {Address | null} address - Current location address details
  * @property {boolean} isSearching - Loading state for search operations
+ * @property {boolean} isLoadingLocation - Loading state for location updates
  * @property {string} searchQuery - Current search input value
  * @property {Function} setSearchQuery - Function to update search query
  * @property {Function} getCurrentLocation - Function to get current location
@@ -24,10 +31,12 @@ const useLocationService = () => {
   const [location, setLocation] = useState<LocationCoords | null>(null);
   const [address, setAddress] = useState<Address | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [hasLocationPermission, setHasLocationPermission] = useState<
     boolean | null
   >(null);
+  const lastKnownLocationRef = useRef<LocationCoords | null>(null);
 
   /**
    * Updates the address state based on the provided coordinates.
@@ -85,30 +94,42 @@ const useLocationService = () => {
 
   /**
    * Gets the current location and updates the location and address state.
-   * Handles permission checks and error cases.
+   * Uses a caching strategy to improve perceived performance:
+   * 1. Immediately shows the last known location while fetching new location
+   * 2. Updates to fresh location when available
    *
    * @returns {Promise<void>} A promise that resolves when location is updated
-   * @throws {Error} If location permission is denied or location cannot be obtained
    */
   const getCurrentLocation = useCallback(async () => {
     try {
       const hasPermission = await checkAndRequestPermission();
       if (!hasPermission) return;
 
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      });
+      setIsLoadingLocation(true);
 
+      // Show cached location immediately for better UX
+      if (lastKnownLocationRef.current) {
+        setLocation(lastKnownLocationRef.current);
+      }
+
+      // Get fresh location
+      const location = await Location.getCurrentPositionAsync(LOCATION_OPTIONS);
       const { latitude, longitude } = location.coords;
-      setLocation({ latitude, longitude });
+
+      // Update both current location and cache
+      const newLocation = { latitude, longitude };
+      setLocation(newLocation);
+      lastKnownLocationRef.current = newLocation;
+
       await updateAddress(latitude, longitude);
-    } catch (error) {
-      console.error("Error getting location:", error);
+    } catch (error: any) {
       Alert.alert(
         Constants.Alerts.LocationError.title,
         Constants.Alerts.LocationError.message,
         [{ text: Constants.Alerts.LocationError.buttonText }]
       );
+    } finally {
+      setIsLoadingLocation(false);
     }
   }, [checkAndRequestPermission]);
 
@@ -158,6 +179,7 @@ const useLocationService = () => {
     location,
     address,
     isSearching,
+    isLoadingLocation,
     searchQuery,
     setSearchQuery,
     getCurrentLocation,

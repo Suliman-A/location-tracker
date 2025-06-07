@@ -21,11 +21,12 @@ const LocationTracker = () => {
     setSearchQuery,
     getCurrentLocation,
     searchPlace,
+    isLoadingLocation,
   } = useLocationService();
 
   useEffect(() => {
     getCurrentLocation();
-  }, []);
+  }, [getCurrentLocation]);
 
   const animateToLocation = (latitude: number, longitude: number) => {
     const newRegion: Region = {
@@ -88,22 +89,17 @@ const LocationTracker = () => {
         isLoading={isSearching}
       />
 
-      {/* Location Details with My Location Button */}
       <View style={styles.bottomContainer}>
         <IconButton
+          testID="location-button"
           icon="crosshairs-gps"
           mode="contained"
           size={24}
           onPress={handleGetCurrentLocation}
-          style={[
-            styles.myLocationButton,
-            { backgroundColor: theme.colors.surface },
-          ]}
+          style={{ backgroundColor: theme.colors.surface }}
           iconColor={theme.colors.primary}
         />
-        <View style={styles.locationDetailsContainer}>
-          <LocationDetails location={location} address={address} />
-        </View>
+        <LocationDetails address={address} isLoading={isLoadingLocation} />
       </View>
     </View>
   );
@@ -123,13 +119,6 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     alignItems: "flex-end",
-  },
-  locationDetailsContainer: {
-    width: "100%",
-    marginTop: 16,
-  },
-  myLocationButton: {
-    // marginBottom: 10,
   },
 });
 
