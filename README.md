@@ -7,6 +7,10 @@ A React Native application that tracks and displays user location on a map, with
 Try the app live on Expo Snack:
 [![Open in Expo Snack](https://img.shields.io/badge/Open%20in-Expo%20Snack-blue)](https://snack.expo.dev/@abdalla-suliman/github.com-suliman-a-location-tracker)
 
+![ScreenRecording_06-07-2025 17 MOV](https://github.com/user-attachments/assets/17a7ad5b-c345-4b20-8101-c290d574b49f)
+
+
+ 
 ## Features
 
 - 📍 Real-time location tracking
