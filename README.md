@@ -2,6 +2,11 @@
 
 A React Native application that tracks and displays user location on a map, with search functionality and theme support.
 
+## Demo
+
+Try the app live on Expo Snack:
+[![Open in Expo Snack](https://img.shields.io/badge/Open%20in-Expo%20Snack-blue)](https://snack.expo.dev/@abdalla-suliman/github.com-suliman-a-location-tracker)
+
 ## Features
 
 - 📍 Real-time location tracking
@@ -94,43 +99,3 @@ src/
 - Implemented location caching for better performance
 - Balanced accuracy settings for optimal battery usage
 - Comprehensive error handling for all location scenarios
-
-### UI/UX
-
-- React Native Paper for consistent, theme-aware components
-- Immediate feedback for user actions
-- Loading states for async operations
-- Clear error messages and alerts
-
-### Performance
-
-- Location caching to show last known location immediately
-- Optimized re-renders using React hooks
-- Balanced GPS accuracy settings
-- Efficient state management
-
-### Testing
-
-- Comprehensive test coverage
-- Clear test descriptions
-- Proper mocking of dependencies
-- Error case handling
-
-## Demo
-
-- Location permission handling
-- Map display
-- Search functionality
-- Theme switching
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
